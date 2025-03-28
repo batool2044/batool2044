@@ -1,0 +1,96 @@
+import SwiftUI
+
+@main
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
+
+struct ContentView: View {
+    @State private var inputText: String = ""
+    @State private var morseText: String = "" 
+    
+    let morseDict: [Character: String] = [
+        "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".",
+        "F": "..-.", "G": "--.", "H": "....", "I": "..", "J": ".---",
+        "K": "-.-", "L": ".-..", "M": "--", "N": "-.", "O": "---",
+        "P": ".--.", "Q": "--.-", "R": ".-.", "S": "...", "T": "-",
+        "U": "..-", "V": "...-", "W": ".--", "X": "-..-", "Y": "-.--",
+        "Z": "--..",
+        "0": "-----", "1": ".----", "2": "..---", "3": "...--",
+        "4": "....-", "5": ".....", "6": "-....", "7": "--...",
+        "8": "---..", "9": "----."
+    ]
+    
+    var body: some View {
+        ZStack {
+            Image("image")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .blur(radius: 3)
+                .overlay(Color.black.opacity(0.3))
+            
+            VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Welcome")
+                        .font(.largeTitle)
+                        .bold()
+                        .frame(maxWidth: 250, alignment: .center)
+                    
+                    Text("English to Morse")
+                        .font(.title)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 200/255, green: 162/255, blue: 200/255).opacity(0.9))
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                
+                TextField("Enter text here", text: $inputText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                    .frame(maxWidth: 550)
+                
+                Button(action: {
+                    morseText = translateToMorse(inputText)
+                }) {
+                    Text("Send")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color(red: 200/255, green: 162/255, blue: 200/255))
+                        .cornerRadius(8)
+                }
+                
+                Text(morseText)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color(red: 200/255, green: 162/255, blue: 200/255).opacity(0.5))
+                    .cornerRadius(8)
+                
+                Spacer()
+            }
+            .padding()
+        }
+    }
+    
+    func translateToMorse(_ text: String) -> String {
+        var morse = ""
+        for char in text.uppercased() {
+            if let morseChar = morseDict[char] {
+                morse += morseChar + " "
+            } else if char == " " {
+                morse += "/ "
+            }else {
+                morse += "?"
+            }
+        }
+        return morse
+    }
+}
+    
